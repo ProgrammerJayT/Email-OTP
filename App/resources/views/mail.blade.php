@@ -1,3 +1,3 @@
 @component('mail::message')
-    Hey (User), Here is your OTP for your account verification
+    Hey {{ $email }} your OTP is {{ $otp }}, and is valid for {{ $time }} minutes.
 @endcomponent
