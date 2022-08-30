@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendOTP;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
 
 class MailControl extends Controller
@@ -15,9 +16,10 @@ class MailControl extends Controller
     }
 
     public function send(Request $req){
+
+        $email = $req->email;
         
-        $email = $req->input();
-        // Mail::to('theanthem8@gmail.com')->send(new SendOTP());
+        Mail::to($email)->send(new SendOTP());
     }
 
     public function getOTP()
