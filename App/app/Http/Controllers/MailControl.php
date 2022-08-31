@@ -7,6 +7,7 @@ use Ichtrojan\Otp\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class MailControl extends Controller
 {
@@ -38,11 +39,17 @@ class MailControl extends Controller
             $expiryTime
         ));
 
-        print_r($otp);
+        if ($otp->status == 1) {
+            return redirect('api/validate?email='.$email);
+
+        } else {
+            return redirect('/')->with('error', 'Error sending OTP');
+        }
     }
 
     public function validate()
     {
-        return view('getOTP');
+        
+        return view('validate');
     }
 }
