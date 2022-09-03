@@ -13,34 +13,34 @@ use Illuminate\Support\Facades\Session;
 
 class MailControl extends Controller
 {
-
-    public $expiryTime; // 1 minute
-    public $otpLength; // 6 digits
-    //
-    public function index()
+    public $maxUsage;
+    public function index(Request $req)
     {
-        return view('welcome');
+
+        $type = '';
+        $message = '';
+
+        if (isset($req->type) && isset($req->message)) {
+            $type = $req->type;
+            $message = $req->message;
+        }
+
+        return view('welcome', [
+            'type' => $type,
+            'message' => $message
+        ]);
     }
 
     public function send(Request $req)
-    {        
-        $this->expiryTime = config('otp.period');
-        $this->otpLength = config('otp.length');
-
+    {
         $email = $req->email;
-        $length = $this->otpLength;
-        $expiryTime = $this->expiryTime;
 
-        dd(self::checkUsage($email));
+        $usage = new UsageControl();
+        $usage->check($email);
 
-        $genOTP = new Otp();
-        $otp = $genOTP->generate(
-            $email,
-            $length,
-            $expiryTime
-        );
-
-        
+        if (!$usage->check($email)) {
+            return redirect('/?type=error&message=You have reached the maximum usage limit');
+        }
 
         // Mail::to($email)->send(new SendOTP(
         //     $otp->token,
@@ -55,10 +55,11 @@ class MailControl extends Controller
         return view('validate');
     }
 
-    public function checkUsage ($email) {
+    public function checkUsage($email)
+    {
 
         $check = ModelsOtp::where('identifier', $email)->first();
-        
+
         if ($check->updated_at->isToday()) {
             return 'Today is the day';
         } else {
