@@ -6,12 +6,11 @@
 
     <div class="d-xl-flex flex-column align-items-xl-center">
         <div class="d-flex d-sm-flex d-xl-flex flex-column align-items-center align-items-sm-center align-items-xl-center">
-            <img src="assets/img/Newsletter-bro.png" style="width: 30%;">
+            <img src={{ asset('assets/img/Newsletter-bro.png') }} style="width: 30%;">
         </div>
         <div class="d-flex d-sm-flex d-xl-flex flex-column align-items-center align-items-sm-center align-items-xl-center"
             style="width: 100%;">
-            <form method="POST" action="api/send"
-                class="d-flex d-xl-flex flex-column align-items-center align-items-xl-center"
+            <form action="api/send" class="d-flex d-xl-flex flex-column align-items-center align-items-xl-center"
                 style="width: 40%;min-width: 70%;">
                 <p style="width: 100%;color: var(--bs-primary);font-weight: bold;">Please enter your valid email address to
                     receive your OTP</p>
