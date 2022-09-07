@@ -19,6 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/send', [MailControl::class, 'send']);
+Route::get('/send', [MailControl::class, 'send']);
 
-Route::get('/validate', [MailControl::class, 'validate']);
+Route::post('/validate', [MailControl::class, 'validate'])->name('validate');
