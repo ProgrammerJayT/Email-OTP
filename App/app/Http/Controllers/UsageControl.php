@@ -43,6 +43,12 @@ class UsageControl extends Controller
         $maxUsage = config('otp.usage');
         $usage = OtpModel::where('identifier', $email)->first();
 
+        if ($usage->usage < $maxUsage) {
+            $usage->usage = $usage->usage + 1;
+            $usage->save();
+            
+        }
+
         return $usage->usage <= $maxUsage ? true : false;
     }
 }
