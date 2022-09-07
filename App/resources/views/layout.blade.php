@@ -11,12 +11,16 @@
     <link rel="stylesheet" href={{ asset('assets/css/styles.css') }}>
     <link rel="stylesheet" href={{ asset('assets/fonts/ionicons.min.css') }}>
     <link rel="stylesheet" href={{ asset('assets/css/alert.css') }}>
+
+    @livewireStyles
+
 </head>
 
 <body>
 
     @yield('content')
 
+    @livewireScripts
     <script src={{ asset('assets/bootstrap/js/bootstrap.min.js') }}></script>
 </body>
 
