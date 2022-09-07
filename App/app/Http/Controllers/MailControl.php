@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendOTP;
+use Carbon\Carbon;
 use Ichtrojan\Otp\Commands\CleanOtps;
 use Ichtrojan\Otp\Models\Otp as ModelsOtp;
 use Ichtrojan\Otp\Otp;
@@ -47,6 +48,20 @@ class MailControl extends Controller
         //     $email,
         //     $expiryTime
         // ));
+        $check = ModelsOtp::where('identifier', $email)->first();
+
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
+        $optRequestTime = $check->updated_at->toTimeString();
+        $optRequestDate = $check->updated_at->toDateString();
+        
+        // print_r($check->updated_at->toTimeString());
+        $difference = Carbon::parse($currentTime)->diffInSeconds($optRequestTime);
+        print_r($difference);        
+
+        return view('validate', [
+            'email' => $email
+        ]);
     }
 
     public function validate()
@@ -55,15 +70,15 @@ class MailControl extends Controller
         return view('validate');
     }
 
-    public function checkUsage($email)
+    public function verify(Request $req)
     {
+        $otp = new Otp();
+        $check = $otp->validate($req->email, $req->otp);
 
-        $check = ModelsOtp::where('identifier', $email)->first();
-
-        if ($check->updated_at->isToday()) {
-            return 'Today is the day';
+        if ($check) {
+            return redirect('/?type=success&message=OTP verified successfully');
         } else {
-            return false;
+            return redirect('/?type=error&message=Invalid OTP');
         }
     }
 }
