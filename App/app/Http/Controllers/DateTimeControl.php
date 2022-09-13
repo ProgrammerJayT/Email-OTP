@@ -17,8 +17,6 @@ class DateTimeControl extends Controller
         $currentDate = Carbon::now()->toDateString();
         $optRequestTime = $record->updated_at->toTimeString();
         $optRequestDate = $record->updated_at->toDateString();
-
-        if ()
         
     }
 }
