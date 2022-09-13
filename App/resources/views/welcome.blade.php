@@ -10,7 +10,8 @@
         </div>
         <div class="d-flex d-sm-flex d-xl-flex flex-column align-items-center align-items-sm-center align-items-xl-center"
             style="width: 100%;">
-            <form action="api/send" class="d-flex d-xl-flex flex-column align-items-center align-items-xl-center"
+            <form method="POST" action="{{ route('getEmail') }}"
+                class="d-flex d-xl-flex flex-column align-items-center align-items-xl-center"
                 style="width: 40%;min-width: 70%;">
                 <p style="width: 100%;color: var(--bs-primary);font-weight: bold;">Please enter your valid email address to
                     receive your OTP</p>
@@ -31,10 +32,10 @@
                     </div>
                 @endif
 
-
                 <div class="d-flex d-xl-flex flex-column align-items-center align-items-xl-center input-group"
-                    style="width: 100%;margin-top: 25px;"><button class="btn btn-primary" type="submit"
-                        style="width: 50%;border-radius: 20px;">Submit</button></div>
+                    style="width: 100%;margin-top: 25px;">
+                    <button class="btn btn-primary" type="submit" style="width: 50%;border-radius: 20px;">Submit</button>
+                </div>
             </form>
         </div>
     </div>
