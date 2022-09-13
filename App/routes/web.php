@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\MailControl;
+use App\Http\Controllers\HomeControl;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [MailControl::class, 'index']);
+Route::get('/', [HomeControl::class, 'index']);
