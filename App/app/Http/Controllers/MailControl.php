@@ -2,83 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendOTP;
-use Carbon\Carbon;
-use Ichtrojan\Otp\Commands\CleanOtps;
 use Ichtrojan\Otp\Models\Otp as ModelsOtp;
 use Ichtrojan\Otp\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
 
 class MailControl extends Controller
 {
-    public $maxUsage;
-    public function index(Request $req)
+    public function getEmail(Request $req)
     {
-
-        $type = '';
-        $message = '';
-
-        if (isset($req->type) && isset($req->message)) {
-            $type = $req->type;
-            $message = $req->message;
-        }
-
-        return view('welcome', [
-            'type' => $type,
-            'message' => $message
-        ]);
-    }
-
-    public function send(Request $req)
-    {
-        $email = $req->email;
-
         $usage = new UsageControl();
-        $usage->check($email);
+        $genOTP = new OTPControl();
+        $email = $req->email;
+        $record = ModelsOtp::where('identifier', $email)->first();
 
-        if (!$usage->check($email)) {
-            return redirect('/?type=error&message=You have reached the maximum usage limit');
-        }
 
-        // Mail::to($email)->send(new SendOTP(
-        //     $otp->token,
-        //     $email,
-        //     $expiryTime
-        // ));
-        $check = ModelsOtp::where('identifier', $email)->first();
+        //Check if user's email already exists in the database
+        if ($record) {
 
-        $currentTime = Carbon::now()->toTimeString();
-        $currentDate = Carbon::now()->toDateString();
-        $optRequestTime = $check->updated_at->toTimeString();
-        $optRequestDate = $check->updated_at->toDateString();
-        
-        // print_r($check->updated_at->toTimeString());
-        $difference = Carbon::parse($currentTime)->diffInSeconds($optRequestTime);
-        print_r($difference);        
+            //Check if user's email has reached the maximum usage
+            if ($usage->usage($email)) {
 
-        return view('validate', [
-            'email' => $email
-        ]);
-    }
+                //Send OTP to user's email
+                $genOTP->create($email);
 
-    public function validate()
-    {
-
-        return view('validate');
-    }
-
-    public function verify(Request $req)
-    {
-        $otp = new Otp();
-        $check = $otp->validate($req->email, $req->otp);
-
-        if ($check) {
-            return redirect('/?type=success&message=OTP verified successfully');
+                return redirect('/api/getOTP?email=' . $email . '&type=success&message=OTP sent to your email');
+            } else {
+                return redirect('/?type=danger&message=You have reached the maximum usage');
+            }
         } else {
-            return redirect('/?type=error&message=Invalid OTP');
+            $genOTP->create($email);
+            return redirect('/api/getOTP?email=' . $email . '&type=success&message=OTP sent to your email');
         }
     }
 }
