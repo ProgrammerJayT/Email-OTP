@@ -38,12 +38,10 @@ class OTPControl extends Controller
         $otp = new Otp();
         $check = $otp->validate($req->email, $req->otp);
 
-        // if ($check) {
-        //     return redirect('/?type=success&message=OTP verified successfully');
-        // } else {
-        //     return redirect('/?type=error&message=Invalid OTP');
-        // }
-
-        print_r($check);
+        if ($check->status == true) {
+            return redirect('/success');
+        } else {
+            print_r($check);
+        }
     }
 }
