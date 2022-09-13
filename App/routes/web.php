@@ -15,3 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeControl::class, 'index']);
+
+Route::get('/success', function () {
+    return view('success');
+});
